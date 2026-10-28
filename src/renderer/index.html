@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+    <title>Pip</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-skin="classic" data-glow="blue" data-antenna="tubes">
+    <div id="pip" class="pip" data-face="normal" data-view="front" data-facing="1">
+      <div class="ambient"></div>
+      <div id="bubble" class="bubble" aria-live="polite"><span id="bubble-text"></span></div>
+
+      <svg class="pip-svg" viewBox="0 0 140 175" width="140" height="175" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="shellGrad" x1="0" y1="0" x2="1" y2="0.6">
+            <stop offset="0" class="stop-shell" />
+            <stop offset="0.65" class="stop-shell" />
+            <stop offset="1" class="stop-shell-2" />
+          </linearGradient>
+          <linearGradient id="shellGradSide" x1="0" y1="0" x2="0.4" y2="1">
+            <stop offset="0" class="stop-shell" />
+            <stop offset="0.55" class="stop-shell" />
+            <stop offset="1" class="stop-shell-2" />
+          </linearGradient>
+          <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" class="stop-screen" />
+            <stop offset="1" class="stop-screen-2" />
+          </linearGradient>
+          <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" class="stop-accent" stop-opacity="0" />
+            <stop offset="1" class="stop-accent" stop-opacity="0.35" />
+          </linearGradient>
+          <pattern id="scan" width="4" height="2.4" patternUnits="userSpaceOnUse">
+            <rect width="4" height="0.9" fill="#ffffff" opacity="0.07" />
+          </pattern>
+          <!-- LED pixel grid laid over the face -->
+          <pattern id="pix" width="3.2" height="3.2" patternUnits="userSpaceOnUse">
+            <path d="M0 0 H3.2 M0 0 V3.2" stroke="#040914" stroke-width="0.8" opacity="0.6" fill="none" />
+          </pattern>
+        </defs>
+
+        <!-- holo ring he floats on -->
+        <g class="holo">
+          <path d="M54 126 L86 126 L106 161 L34 161 Z" fill="url(#beamGrad)" class="beam" />
+          <ellipse cx="70" cy="161" rx="37" ry="8" class="ring ring-1" />
+          <ellipse cx="70" cy="161" rx="24" ry="5" class="ring ring-2" />
+        </g>
+
+        <g class="hover">
+          <g class="spinner">
+            <g class="tilt">
+              <!-- ============ FRONT VIEW ============ -->
+              <g class="view view-front">
+                <g class="antenna antenna-l">
+                  <g class="ant-tube">
+                    <rect x="37" y="4" width="12" height="26" rx="6" class="tip" />
+                  </g>
+                  <g class="ant-bulb">
+                    <rect x="41" y="14" width="4" height="14" class="collar" />
+                    <circle cx="43" cy="12" r="7.5" class="tip" />
+                  </g>
+                  <rect x="35" y="22.5" width="16" height="5" rx="2" class="collar-ring" />
+                  <rect x="34" y="25" width="18" height="11" rx="3" class="collar" />
+                </g>
+                <g class="antenna antenna-r">
+                  <g class="ant-tube">
+                    <rect x="91" y="4" width="12" height="26" rx="6" class="tip" />
+                  </g>
+                  <g class="ant-bulb">
+                    <rect x="95" y="14" width="4" height="14" class="collar" />
+                    <circle cx="97" cy="12" r="7.5" class="tip" />
+                  </g>
+                  <rect x="89" y="22.5" width="16" height="5" rx="2" class="collar-ring" />
+                  <rect x="88" y="25" width="18" height="11" rx="3" class="collar" />
+                </g>
+
+                <g class="head">
+                  <rect x="12" y="34" width="116" height="92" rx="28" fill="url(#shellGrad)" class="casing" />
+                  <path d="M28 44 q10 -6 26 -6" class="highlight" />
+                  <rect x="56" y="35.5" width="28" height="4.5" rx="2.25" class="strip" />
+                  <rect x="13.5" y="68" width="4.5" height="26" rx="2.25" class="edge-l" />
+                  <rect x="122" y="68" width="4.5" height="26" rx="2.25" class="edge-r" />
+
+                  <rect x="22" y="46" width="96" height="70" rx="18" class="bezel" />
+                  <rect x="27" y="51" width="86" height="60" rx="14" fill="url(#screenGrad)" class="screen" />
+
+                  <g class="face">
+                    <g id="look">
+                      <g class="expr expr-normal">
+                        <g class="eyes">
+                          <rect x="48" y="64" width="11" height="24" rx="5.5" />
+                          <rect x="81" y="64" width="11" height="24" rx="5.5" />
+                        </g>
+                        <path class="mouth" d="M64 95 q6 5 12 0" />
+                      </g>
+                      <g class="expr expr-excited">
+                        <path d="M47 68 l12 8 l-12 8" />
+                        <path d="M93 68 l-12 8 l12 8" />
+                        <path class="mouth" d="M62 92 q8 8 16 0" />
+                      </g>
+                      <g class="expr expr-curious">
+                        <circle cx="54" cy="78" r="5.5" />
+                        <path d="M83 70 q0 -6 6 -6 q6 0 6 6 q0 5 -6 6 v3" />
+                        <circle cx="89" cy="87" r="2" />
+                        <path class="mouth" d="M64 97 q4 3 8 0" />
+                      </g>
+                      <g class="expr expr-sleepy">
+                        <rect x="46" y="75" width="15" height="4.5" rx="2.25" />
+                        <rect x="79" y="75" width="15" height="4.5" rx="2.25" />
+                        <path class="mouth" d="M66 96 h8" />
+                      </g>
+                      <g class="expr expr-surprised">
+                        <circle cx="53.5" cy="76" r="7" class="ring-stroke" />
+                        <circle cx="86.5" cy="76" r="7" class="ring-stroke" />
+                        <circle cx="70" cy="97" r="3.5" class="ring-stroke mouth" />
+                      </g>
+                      <g class="expr expr-wink">
+                        <rect x="48" y="64" width="11" height="24" rx="5.5" />
+                        <path d="M80 79 h13" />
+                        <path class="mouth" d="M64 95 q6 5 12 0" />
+                      </g>
+                      <g class="expr expr-silly">
+                        <path d="M47 81 q6.5 -11 13 0" />
+                        <path d="M80 81 q6.5 -11 13 0" />
+                        <path class="mouth" d="M61 91 q9 7 18 0" />
+                        <path class="tongue" d="M66.5 94.5 q3.5 8 7 0 z" />
+                      </g>
+                      <g class="expr expr-sad">
+                        <path d="M46 67 l12 -3" />
+                        <path d="M94 67 l-12 -3" />
+                        <rect x="48" y="71" width="11" height="17" rx="5.5" />
+                        <rect x="81" y="71" width="11" height="17" rx="5.5" />
+                        <path class="mouth" d="M64 99 q6 -5 12 0" />
+                      </g>
+                      <g class="expr expr-annoyed">
+                        <path d="M46 66 l14 5" />
+                        <path d="M94 66 l-14 5" />
+                        <rect x="48" y="74" width="11" height="10" rx="3.5" />
+                        <rect x="81" y="74" width="11" height="10" rx="3.5" />
+                        <path class="mouth" d="M64 98 q6 -4 12 0" />
+                      </g>
+                      <g class="expr expr-love">
+                        <path class="heart" d="M53.5 85 l-8 -8 a4.6 4.6 0 0 1 8 -6.2 a4.6 4.6 0 0 1 8 6.2 z" />
+                        <path class="heart" d="M86.5 85 l-8 -8 a4.6 4.6 0 0 1 8 -6.2 a4.6 4.6 0 0 1 8 6.2 z" />
+                        <path class="mouth" d="M64 95 q6 5 12 0" />
+                      </g>
+                    </g>
+                    <ellipse class="mouth-talk" cx="70" cy="96" rx="5.5" ry="4.2" />
+                  </g>
+
+                  <rect x="27" y="51" width="86" height="60" rx="14" fill="url(#pix)" class="overlay" />
+                  <rect x="27" y="51" width="86" height="60" rx="14" fill="url(#scan)" class="overlay" />
+                  <path d="M34 59 q6 -5 18 -5" class="glare" />
+
+                  <g class="stickers">
+                    <g transform="rotate(-12 108 41)">
+                      <circle cx="108" cy="41" r="7" class="sticker-smiley" />
+                      <circle cx="105.7" cy="39.6" r="1" class="sticker-ink" />
+                      <circle cx="110.3" cy="39.6" r="1" class="sticker-ink" />
+                      <path d="M104.8 43 q3.2 2.8 6.4 0" class="sticker-line" />
+                    </g>
+                    <g transform="rotate(-8 34 121)">
+                      <rect x="23" y="115.5" width="22" height="11" rx="3" class="sticker-badge" />
+                      <text x="34" y="124" class="sticker-text">PiP</text>
+                    </g>
+                    <path
+                      transform="translate(88 14)"
+                      class="sticker-star"
+                      d="M22 98 L23.53 101.9 L27.71 102.15 L24.47 104.8 L25.53 108.85 L22 106.6 L18.47 108.85 L19.53 104.8 L16.29 102.15 L20.47 101.9 Z"
+                    />
+                  </g>
+                </g>
+              </g>
+
+              <!-- ============ SIDE VIEW (faces right; flipped for left) ============ -->
+              <g class="side-flip">
+                <g class="view view-side">
+                  <g class="antenna antenna-side">
+                    <g class="ant-tube">
+                      <rect x="62" y="4" width="12" height="26" rx="6" class="tip" />
+                    </g>
+                    <g class="ant-bulb">
+                      <rect x="66" y="14" width="4" height="14" class="collar" />
+                      <circle cx="68" cy="12" r="7.5" class="tip" />
+                    </g>
+                    <rect x="60" y="22.5" width="16" height="5" rx="2" class="collar-ring" />
+                    <rect x="59" y="25" width="18" height="11" rx="3" class="collar" />
+                  </g>
+
+                  <g class="head">
+                    <rect x="28" y="34" width="84" height="92" rx="28" fill="url(#shellGradSide)" class="casing" />
+                    <path d="M42 44 q10 -6 24 -6" class="highlight" />
+                    <rect x="46" y="35.5" width="36" height="4.5" rx="2.25" class="strip" />
+
+                    <!-- back: vents and a port -->
+                    <rect x="36" y="62" width="15" height="4" rx="2" class="dark" />
+                    <rect x="36" y="70" width="15" height="4" rx="2" class="dark" />
+                    <rect x="36" y="78" width="15" height="4" rx="2" class="dark" />
+                    <rect x="38" y="99" width="10" height="12" rx="2.5" class="dark" />
+
+                    <!-- front: the screen's edge, with a peek of his eye -->
+                    <rect x="102" y="46" width="14" height="70" rx="7" class="bezel" />
+                    <rect x="109" y="52" width="4.5" height="58" rx="2.25" fill="url(#screenGrad)" class="screen-edge" />
+                    <g class="face side-face">
+                      <rect x="109.6" y="65" width="3.4" height="22" rx="1.7" class="side-eye" />
+                    </g>
+                    <rect x="100" y="68" width="3.5" height="26" rx="1.75" class="edge-r" />
+
+                    <g class="stickers">
+                      <g transform="rotate(-8 72 63)">
+                        <g class="unflip">
+                          <rect x="58" y="56" width="28" height="14" rx="3.5" class="sticker-badge" />
+                          <text x="72" y="66.6" class="sticker-text sticker-text-lg">PiP</text>
+                        </g>
+                      </g>
+                      <path
+                        transform="translate(46 -6)"
+                        class="sticker-star"
+                        d="M22 98 L23.53 101.9 L27.71 102.15 L24.47 104.8 L25.53 108.85 L22 106.6 L18.47 108.85 L19.53 104.8 L16.29 102.15 L20.47 101.9 Z"
+                      />
+                      <g transform="rotate(10 88 106)">
+                        <circle cx="88" cy="106" r="6" class="sticker-smiley" />
+                        <circle cx="86" cy="104.8" r="0.9" class="sticker-ink" />
+                        <circle cx="90" cy="104.8" r="0.9" class="sticker-ink" />
+                        <path d="M85.3 107.8 q2.7 2.4 5.4 0" class="sticker-line" />
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div id="fx"></div>
+
+    <script src="lines.js"></script>
+    <script src="pip.js"></script>
+  </body>
+</html>

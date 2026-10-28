@@ -1,0 +1,61 @@
+{
+  "name": "pip-desktop",
+  "productName": "Pip",
+  "version": "0.1.0",
+  "description": "A little retro robot that lives on your desktop.",
+  "main": "src/main.js",
+  "author": "OnlyGilk",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.pipdesktop.app",
+    "productName": "Pip",
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "artifactName": "Pip-Setup-${version}.${ext}",
+      "oneClick": true,
+      "perMachine": false
+    },
+    "mac": {
+      "target": "zip",
+      "icon": "assets/icon.png",
+      "category": "public.app-category.entertainment",
+      "artifactName": "Pip-mac-${arch}-${version}.${ext}",
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png",
+      "category": "Utility",
+      "artifactName": "Pip-linux-${arch}-${version}.${ext}"
+    }
+  },
+  "allowScripts": {
+    "electron@37.10.3": true,
+    "electron-winstaller@5.4.0": true
+  }
+}

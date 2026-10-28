@@ -1,0 +1,430 @@
+/* ================================================================
+   Pip's look.
+   body[data-skin]     shell colours (Classic / Neon / Retro / Midnight)
+   body[data-glow]     screen, antenna and holo-ring light
+   body[data-antenna]  antenna style (tubes / bulbs)
+   #pip[data-face]     expression (+ antenna mood colour)
+   #pip[data-view]     front / side profile, data-facing 1 = right, -1 = left
+   ================================================================ */
+
+:root {
+  --ink: #22212b;
+  --bubble-bg: rgba(8, 14, 30, 0.94);
+  --edge-warm: #ff6f61;
+}
+
+/* ---------- Skins ---------- */
+body,
+body[data-skin="classic"] {
+  --shell: #f5efe3;
+  --shell-2: #d7cdbc;
+  --bezel: #2f3340;
+  --dark: #3c404c;
+  --collar: #1b1c23;
+  --strip: #c77dff;
+  --screen: #0b1a38;
+  --screen-2: #040914;
+}
+body[data-skin="neon"] {
+  --shell: #9a70fa;
+  --shell-2: #6438d2;
+  --bezel: #261a46;
+  --dark: #3a2c60;
+  --collar: #18122b;
+  --strip: #ff79e1;
+  --screen: #120b33;
+  --screen-2: #060314;
+}
+body[data-skin="retro"] {
+  --shell: #66cc92;
+  --shell-2: #2f9461;
+  --bezel: #1d362a;
+  --dark: #2f463a;
+  --collar: #14211a;
+  --strip: #d8ff6b;
+  --screen: #071f17;
+  --screen-2: #020e0a;
+}
+body[data-skin="midnight"] {
+  --shell: #3f3d4d;
+  --shell-2: #22212c;
+  --bezel: #15151c;
+  --dark: #2b2a36;
+  --collar: #0e0e13;
+  --strip: #7aa2ff;
+  --screen: #0a1022;
+  --screen-2: #03060f;
+  --ink: #0d0d12;
+}
+
+/* ---------- Glow colours ---------- */
+body,
+body[data-glow="blue"] { --accent: #4fc8ff; }
+body[data-glow="cyan"] { --accent: #4ff0e6; }
+body[data-glow="pink"] { --accent: #ff73d1; }
+body[data-glow="green"] { --accent: #6dff9e; }
+body[data-glow="amber"] { --accent: #ffbf4d; }
+body[data-glow="purple"] { --accent: #b48cff; }
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+/* ---------- Pip container ---------- */
+
+.pip {
+  --mood: var(--accent);
+  --tilt: 0deg;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 140px;
+  height: 175px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.pip[data-face="love"] { --mood: #ff6fb5; }
+.pip[data-face="annoyed"] { --mood: #ff5a5a; }
+.pip[data-face="surprised"],
+.pip[data-face="excited"] { --mood: #ffe16b; }
+.pip[data-face="sad"] { --mood: #6f8cff; }
+.pip.asleep { --mood: #59607a; }
+
+.pip-svg { position: relative; display: block; overflow: visible; }
+
+/* groups that transform around Pip's centre, not their own box */
+.hover, .spinner, .tilt, .view, .side-flip, .holo {
+  transform-box: view-box;
+  transform-origin: 70px 80px;
+}
+.holo { transform-origin: 70px 161px; }
+.antenna, .antenna * , .eyes, .unflip, .face, .expr { transform-box: fill-box; }
+
+/* ---------- Shared parts ---------- */
+
+.stop-shell { stop-color: var(--shell); }
+.stop-shell-2 { stop-color: var(--shell-2); }
+.stop-screen { stop-color: var(--screen); }
+.stop-screen-2 { stop-color: var(--screen-2); }
+.stop-accent { stop-color: var(--accent); }
+
+.casing { stroke: var(--ink); stroke-width: 2.5; }
+.dark { fill: var(--dark); }
+.bezel { fill: var(--bezel); stroke: var(--ink); stroke-width: 2; }
+.screen { stroke: rgba(0, 0, 0, 0.5); stroke-width: 1.5; }
+.screen-edge { stroke: var(--accent); stroke-width: 0.8; stroke-opacity: 0.7; }
+.overlay { pointer-events: none; }
+.highlight { fill: none; stroke: #ffffff; stroke-opacity: 0.5; stroke-width: 3; stroke-linecap: round; }
+.glare { fill: none; stroke: #ffffff; stroke-opacity: 0.16; stroke-width: 2.5; stroke-linecap: round; }
+
+.strip { fill: var(--strip); filter: drop-shadow(0 0 2.5px var(--strip)); }
+.edge-l { fill: var(--edge-warm); filter: drop-shadow(0 0 3px var(--edge-warm)); }
+.edge-r { fill: var(--accent); filter: drop-shadow(0 0 3px var(--accent)); }
+
+.collar { fill: var(--collar); stroke: var(--ink); stroke-width: 1.5; }
+.collar-ring { fill: var(--dark); stroke: var(--ink); stroke-width: 1.2; }
+
+.tip {
+  fill: var(--mood);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 3px var(--mood)) drop-shadow(0 0 7px var(--mood));
+  transition: fill 0.3s ease;
+  animation: tip-pulse 2.6s ease-in-out infinite;
+}
+.antenna-r .tip { animation-delay: 1.3s; }
+@keyframes tip-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* antenna styles */
+.ant-bulb { display: none; }
+body[data-antenna="bulbs"] .ant-tube { display: none; }
+body[data-antenna="bulbs"] .ant-bulb { display: inline; }
+
+/* stickers */
+.sticker-smiley { fill: #ffcf3a; stroke: #ffffff; stroke-width: 1.3; }
+.sticker-ink { fill: var(--ink); }
+.sticker-line { fill: none; stroke: var(--ink); stroke-width: 1.2; stroke-linecap: round; }
+.sticker-badge { fill: #7b4fe0; stroke: #ffffff; stroke-width: 1.3; }
+.sticker-text {
+  font: 900 8px/1 "Segoe UI", "Arial Black", system-ui, sans-serif;
+  fill: #ffffff;
+  text-anchor: middle;
+}
+.sticker-text-lg { font-size: 9.5px; }
+.sticker-star { fill: #ffcf3a; stroke: #ffffff; stroke-width: 1.2; stroke-linejoin: round; }
+body.no-stickers .stickers { display: none; }
+
+/* ---------- Face ---------- */
+
+.face {
+  color: var(--accent);
+  filter: drop-shadow(0 0 2px var(--accent)) drop-shadow(0 0 5px var(--accent));
+}
+.face rect, .face circle, .face ellipse { fill: currentColor; }
+.face path { fill: none; stroke: currentColor; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
+.face .ring-stroke { fill: none; stroke: currentColor; stroke-width: 3.2; }
+.face .tongue { fill: currentColor; stroke-width: 1.5; }
+.face .heart { fill: #ff7cc4; stroke: #ff7cc4; stroke-width: 1; }
+.pip[data-face="love"] .view-front .face { filter: drop-shadow(0 0 3px #ff7cc4) drop-shadow(0 0 6px #ff7cc4); }
+#look { transition: transform 0.12s ease-out; }
+
+.expr { display: none; }
+.pip[data-face="normal"] .expr-normal,
+.pip[data-face="excited"] .expr-excited,
+.pip[data-face="curious"] .expr-curious,
+.pip[data-face="sleepy"] .expr-sleepy,
+.pip[data-face="surprised"] .expr-surprised,
+.pip[data-face="wink"] .expr-wink,
+.pip[data-face="silly"] .expr-silly,
+.pip[data-face="sad"] .expr-sad,
+.pip[data-face="annoyed"] .expr-annoyed,
+.pip[data-face="love"] .expr-love { display: inline; }
+
+.eyes { transform-origin: center; transition: transform 0.07s ease-in; }
+.pip.blink .eyes { transform: scaleY(0.1); }
+
+.side-eye { transform-box: fill-box; transform-origin: center; transition: transform 0.07s ease-in; }
+.pip.blink .side-eye,
+.pip[data-face="sleepy"] .side-eye,
+.pip[data-face="wink"] .side-eye { transform: scaleY(0.18); }
+.pip[data-face="excited"] .side-eye,
+.pip[data-face="silly"] .side-eye { transform: scaleY(0.55); }
+
+.mouth-talk { display: none; }
+.pip.talking .mouth-talk { display: inline; animation: talk-open 0.22s steps(1) infinite; }
+.pip.talking .mouth { animation: talk-closed 0.22s steps(1) infinite; }
+@keyframes talk-open { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes talk-closed { 0% { opacity: 0; } 50% { opacity: 1; } }
+
+.pip.asleep .face { opacity: 0.55; filter: none; }
+.pip.asleep .tip,
+.pip.asleep .edge-l,
+.pip.asleep .edge-r { animation: none; filter: none; opacity: 0.55; }
+
+/* ---------- Front / side profile turn ----------
+   The visible view squashes to nothing, then the other unfolds:
+   reads as Pip turning his head-body to face where he's going. */
+
+.view { transition: transform 0.16s ease-in, opacity 0.16s step-end; }
+.pip[data-view="front"] .view-front,
+.pip[data-view="side"] .view-side {
+  transform: scaleX(1);
+  opacity: 1;
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.15) 0.15s, opacity 0s linear 0.15s;
+}
+.pip[data-view="front"] .view-side,
+.pip[data-view="side"] .view-front { transform: scaleX(0.04); opacity: 0; }
+
+/* turning around mid-glide: the side view swings through itself */
+.side-flip { transition: transform 0.34s cubic-bezier(0.45, 0, 0.25, 1); }
+.pip[data-facing="-1"] .side-flip { transform: scaleX(-1); }
+.unflip { transform-origin: center; transition: transform 0.34s cubic-bezier(0.45, 0, 0.25, 1); }
+.pip[data-facing="-1"] .unflip { transform: scaleX(-1); }
+
+/* ---------- Floating ---------- */
+
+.hover { animation: hover 2.8s ease-in-out infinite; }
+@keyframes hover {
+  0%, 100% { transform: translateY(1px); }
+  50% { transform: translateY(-5px); }
+}
+.holo { animation: holo 2.8s ease-in-out infinite; }
+@keyframes holo {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.9); opacity: 0.75; }
+}
+
+.ring { fill: none; stroke: var(--accent); }
+.ring-1 {
+  stroke-width: 2.6;
+  fill: color-mix(in srgb, var(--accent) 10%, transparent);
+  filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 7px var(--accent));
+}
+.ring-2 { stroke-width: 1.4; stroke-opacity: 0.6; stroke-dasharray: 5 4; animation: ring-spin 6s linear infinite; }
+@keyframes ring-spin { to { stroke-dashoffset: -90; } }
+.beam { pointer-events: none; }
+
+.tilt { transform: rotate(var(--tilt)); transition: transform 0.25s ease-out; }
+.pip.dragging .tilt { transition: none; }
+
+/* asleep: drifts lower, slower breathing, dim ring */
+.pip.asleep .hover { animation: doze 4.2s ease-in-out infinite; }
+@keyframes doze {
+  0%, 100% { transform: translateY(10px) rotate(-3deg); }
+  50% { transform: translateY(7px) rotate(-3deg); }
+}
+.pip.asleep .holo { animation: none; opacity: 0.35; transform: scale(0.85); }
+.pip.asleep .ring-2 { animation: none; }
+
+/* materialise on start-up */
+.pip.appear .holo { animation: holo-in 0.6s ease-out both; }
+.pip.appear .hover { animation: head-in 0.9s cubic-bezier(0.2, 1.4, 0.4, 1) 0.25s both; }
+@keyframes holo-in {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes head-in {
+  from { transform: translateY(40px) scale(0.2); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* ---------- Little actions ---------- */
+
+.antenna { transform-origin: 50% 100%; }
+.antenna-l { transform: rotate(-6deg); }
+.antenna-r { transform: rotate(6deg); }
+.antenna-side { transform: rotate(-8deg); }
+.pip[data-view="side"].moving .antenna-side { animation: ear-trail 0.5s ease-in-out infinite alternate; }
+@keyframes ear-trail {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(-16deg); }
+}
+.pip.asleep .antenna-l { transform: rotate(-18deg); }
+.pip.asleep .antenna-r { transform: rotate(18deg); }
+
+.pip.waving .antenna-l { animation: ear-wave-l 0.3s ease-in-out 4 alternate; }
+.pip.waving .antenna-r { animation: ear-wave-r 0.3s ease-in-out 4 alternate; }
+@keyframes ear-wave-l {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(-24deg); }
+}
+@keyframes ear-wave-r {
+  from { transform: rotate(4deg); }
+  to { transform: rotate(24deg); }
+}
+
+.pip.hop .spinner { animation: hop 0.4s ease-out; }
+@keyframes hop {
+  0% { transform: scale(1.08, 0.92); }
+  40% { transform: translateY(-9px) scale(0.95, 1.06); }
+  100% { transform: none; }
+}
+.pip.squash .spinner { animation: squash 0.32s ease-out; }
+@keyframes squash {
+  0% { transform: scale(1.16, 0.84); }
+  60% { transform: scale(0.96, 1.04); }
+  100% { transform: none; }
+}
+.pip.shake .spinner { animation: shake 0.08s linear 5 alternate; }
+@keyframes shake {
+  from { transform: rotate(-5deg); }
+  to { transform: rotate(5deg); }
+}
+.pip.spin .spinner { animation: spin 0.8s cubic-bezier(0.5, 0, 0.3, 1); }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pip[data-face="curious"] .spinner { transform: rotate(-6deg); transition: transform 0.3s ease; }
+
+/* ---------- Ambient light ---------- */
+
+.ambient {
+  position: absolute;
+  left: -50px;
+  top: -10px;
+  width: 240px;
+  height: 200px;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 48% 46% at 50% 50%,
+    color-mix(in srgb, var(--accent) 26%, transparent),
+    transparent 100%
+  );
+  animation: ambient 4s ease-in-out infinite;
+}
+@keyframes ambient {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.6; }
+}
+body.no-ambient .ambient { display: none; }
+.pip.asleep .ambient { opacity: 0.3; animation: none; }
+
+/* ---------- Speech bubble (glowing screen style) ---------- */
+
+.bubble {
+  position: absolute;
+  bottom: 176px;
+  left: 50%;
+  max-width: 240px;
+  width: max-content;
+  padding: 9px 13px;
+  background: var(--bubble-bg);
+  color: color-mix(in srgb, var(--accent) 70%, #ffffff);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent),
+    inset 0 0 12px color-mix(in srgb, var(--accent) 20%, transparent);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--accent) 70%, transparent);
+  font: 700 13px/1.35 "Cascadia Mono", "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  transform: translateX(calc(-50% + var(--nudge, 0px))) scale(0.6);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.3, 1.6, 0.6, 1);
+  z-index: 2;
+}
+.bubble.below { bottom: auto; top: 172px; transform-origin: 50% 0%; }
+.bubble.show {
+  opacity: 1;
+  transform: translateX(calc(-50% + var(--nudge, 0px))) scale(1);
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - var(--nudge, 0px));
+  bottom: -8px;
+  width: 11px;
+  height: 11px;
+  background: var(--bubble-bg);
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: translateX(-50%) rotate(45deg);
+}
+.bubble.below::after { bottom: auto; top: -8px; transform: translateX(-50%) rotate(225deg); }
+#bubble-text::after {
+  content: "▌";
+  margin-left: 1px;
+  animation: caret 0.8s steps(1) infinite;
+}
+.bubble.done #bubble-text::after { content: ""; }
+@keyframes caret { 50% { opacity: 0; } }
+
+/* ---------- Floating effects ---------- */
+
+#fx { position: absolute; inset: 0; pointer-events: none; }
+.fx {
+  position: absolute;
+  font: 800 19px/1 "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  color: var(--accent);
+  text-shadow: 0 0 6px var(--accent);
+  animation: float-up 1.6s ease-out forwards;
+}
+.fx.heart { color: #ff6fb5; text-shadow: 0 0 6px #ff6fb5; }
+.fx.spark { color: #ffe16b; text-shadow: 0 0 6px #ffe16b; font-size: 15px; }
+.fx.trail { font-size: 11px; animation: trail 0.9s ease-out forwards; }
+@keyframes float-up {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  15% { opacity: 1; transform: translate(calc(var(--dx) * 0.2), -10px) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), -70px) scale(1.1); }
+}
+@keyframes trail {
+  0% { opacity: 0.9; transform: scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translate(var(--dx), 14px) scale(0.3) rotate(90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover, .holo, .tip, .ambient, .ring-2 { animation: none !important; }
+}
